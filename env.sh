@@ -1,11 +1,7 @@
 #!/bin/sh
 set -eu
 
-stage='default'
-
-if [ $# -eq 1 ]; then
-	stage=$1
-fi
+stage=${1:-'default'}
 
 cat <<EOF
 COMMON_VARIABLE=foo
