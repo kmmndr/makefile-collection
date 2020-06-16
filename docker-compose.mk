@@ -1,17 +1,17 @@
 compose_files :=
 
 .PHONY: docker-compose-pull
-docker-compose-pull: environment
+docker-compose-pull: environment ##- Pull latest containers
 	$(info *** Pulling containers ***)
-	$(load_env); docker-compose ${compose_files} pull
+	-$(load_env); docker-compose ${compose_files} pull
 
 .PHONY: docker-compose-start
-docker-compose-start: environment docker-compose-pull ##- Starting docker-compose containers
+docker-compose-start: environment ##- Start containers
 	$(info *** Starting containers ***)
 	$(load_env); docker-compose ${compose_files} up -d
 
 .PHONY: docker-compose-stop
-docker-compose-stop: environment ##- Stopping docker-compose containers
+docker-compose-stop: environment ##- Stop containers
 	$(info *** Stopping containers ***)
 	$(load_env); docker-compose ${compose_files} down
 
