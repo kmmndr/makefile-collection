@@ -5,6 +5,11 @@ docker-compose-pull: environment ##- Pull latest containers
 	$(info *** Pulling containers ***)
 	-$(load_env); docker-compose ${compose_files} pull
 
+.PHONY: docker-compose-build
+docker-compose-build: environment ##- Build containers
+	$(info *** Building containers ***)
+	$(load_env); docker-compose ${compose_files} build
+
 .PHONY: docker-compose-start
 docker-compose-start: environment ##- Start containers
 	$(info *** Starting containers ***)
@@ -14,6 +19,11 @@ docker-compose-start: environment ##- Start containers
 docker-compose-stop: environment ##- Stop containers
 	$(info *** Stopping containers ***)
 	$(load_env); docker-compose ${compose_files} down
+
+.PHONY: docker-compose-logs
+docker-compose-logs: environment ##- Print containers logs
+	$(info *** Printing containers logs ***)
+	$(load_env); docker-compose ${compose_files} logs -f
 
 .PHONY: docker-compose-check-remote-env
 docker-compose-check-remote-env: environment ##- Check environment variables
