@@ -3,6 +3,7 @@ BUILD_ID      ?= edge
 REF_ID        ?= latest
 BUILD_SUBPATH ?= dev
 PROJECT_PATH  ?= $(notdir $(realpath $(dir $(lastword $(MAKEFILE_LIST)))))
+DOCKERFILE    ?= Dockerfile
 
 REGISTRY_PROJECT_URL ?= $(REGISTRY)/$(PROJECT_PATH)
 
@@ -10,7 +11,7 @@ CONTAINER_BUILD_IMAGE=$(REGISTRY_PROJECT_URL)/${BUILD_SUBPATH}:$(BUILD_ID)
 CONTAINER_REF_IMAGE=$(REGISTRY_PROJECT_URL)/${BUILD_SUBPATH}:$(REF_ID)
 CONTAINER_RELEASE_IMAGE=${REGISTRY_PROJECT_URL}:${REF_ID}
 
-DOCKER_TARGETS=$(shell cat Dockerfile | awk '/^[[:blank:]]*FROM/ { print $$4 }' | xargs)
+DOCKER_TARGETS=$(shell cat ${DOCKERFILE} | awk '/^[[:blank:]]*FROM/ { print $$4 }' | xargs)
 
 ## Pull
 .PHONY: docker-pull-stages
