@@ -1,6 +1,8 @@
 # REGISTRY_PROJECT_URL ?= my-awesome-registry.org/my-cool-project
 # BUILD_ID ?= commit_sha
-# REF_ID ?= branch_name
+# BUILD_ID ?=$(shell test -d .git && git rev-parse --short=8 HEAD)
+# REF_ID = branch_name
+# REF_ID ?=$(shell test -d .git && git symbolic-ref --short HEAD)
 
 default: help
 include *.mk
