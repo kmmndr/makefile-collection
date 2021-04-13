@@ -1,3 +1,5 @@
+# https://github.com/kmmndr/makefile-collection
+
 stage ?= default
 
 .PHONY: environment

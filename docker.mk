@@ -1,3 +1,5 @@
+# https://github.com/kmmndr/makefile-collection
+
 REGISTRY      ?= localhost
 BUILD_ID      ?= edge
 REF_ID        ?= latest
