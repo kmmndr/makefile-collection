@@ -18,7 +18,7 @@ generate-env: env.sh ##- Generate environment file ${stage}.env
 	@./env.sh ${stage} > ${stage}.env
 	@$(eval OVERRIDE_ENV_FILE?=./override.env)
 	@[ -f "${OVERRIDE_ENV_FILE}" ] && echo "Appending environment override"; true
-	@(([ -x "${OVERRIDE_ENV_FILE}" ] && "${OVERRIDE_ENV_FILE}") || \
+	@(([ -x "${OVERRIDE_ENV_FILE}" ] && "${OVERRIDE_ENV_FILE}" ${stage}) || \
 		([ -r "${OVERRIDE_ENV_FILE}" ] && cat "${OVERRIDE_ENV_FILE}") || true) | tee -a ${stage}.env
 	@echo "Environment file ${stage}.env generated"
 
