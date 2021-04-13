@@ -63,7 +63,7 @@ docker-push-stages: ##- Push intermediate containers to registry
 	@for docker_target in ${DOCKER_TARGETS}; \
 	do \
 		docker_intermediate_image="${CONTAINER_BUILD_IMAGE}-$$docker_target"; \
-		docker push $$docker_intermediate_image || true; \
+		docker push $$docker_intermediate_image; \
 	done
 
 .PHONY: docker-push-final
