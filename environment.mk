@@ -2,6 +2,15 @@
 
 stage ?= default
 
+.PHONY: stage-%
+stage-%:
+	@$(eval override stage=$(patsubst stage-%,%,$@))
+	@echo "Setting stage to ${stage}"
+
+check-stage-%: environment
+	@$(eval expected_stage=$(patsubst check-stage-%,%,$@))
+	@[ "${stage}" = "${expected_stage}" ] || (echo "Expected stage ${expected_stage}, actual ${stage}"; exit 1)
+
 .PHONY: environment
 environment: ${stage}.env ##- Define environment variables
 	@test ${stage} || (echo 'stage not set'; exit 1)
