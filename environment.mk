@@ -4,11 +4,11 @@ stage ?= default
 
 .PHONY: stage-%
 stage-%:
-	@$(eval override stage=$(patsubst stage-%,%,$@))
+	@$(eval override stage=$*)
 	@echo "Setting stage to ${stage}"
 
 check-stage-%: environment
-	@$(eval expected_stage=$(patsubst check-stage-%,%,$@))
+	@$(eval expected_stage=$*)
 	@[ "${stage}" = "${expected_stage}" ] || (echo "Expected stage ${expected_stage}, actual ${stage}"; exit 1)
 
 .PHONY: environment
@@ -26,10 +26,20 @@ generate-env: env.sh ##- Generate environment file ${stage}.env
 	@test ${stage} || (echo 'stage not set'; exit 1)
 	@./env.sh ${stage} > ${stage}.env
 	@$(eval OVERRIDE_ENV_FILE?=./override.env)
-	@[ -f "${OVERRIDE_ENV_FILE}" ] && echo "Appending environment override"; true
-	@(([ -x "${OVERRIDE_ENV_FILE}" ] && "${OVERRIDE_ENV_FILE}" ${stage}) || \
-		([ -r "${OVERRIDE_ENV_FILE}" ] && cat "${OVERRIDE_ENV_FILE}") || true) | tee -a ${stage}.env
+	@for override_env_file in ${OVERRIDE_ENV_FILE}; \
+	do \
+		[ -f "$${override_env_file}" ] && echo "Appending environment override from file $${override_env_file}"; true; \
+		(([ -x "$${override_env_file}" ] && "$${override_env_file}" ${stage}) || \
+			([ -r "$${override_env_file}" ] && cat "$${override_env_file}") || true) | tee -a ${stage}.env; \
+	done
 	@echo "Environment file ${stage}.env generated"
+
+generate-folder-env-%:
+	@current_dir=$(shell pwd); \
+		make \
+			-C $* \
+			-e OVERRIDE_ENV_FILE="$$current_dir/host.env $$current_dir/$*.env" \
+			generate-env
 
 .PHONY: dump-env
 dump-env: environment ##- Dump environment
