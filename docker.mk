@@ -18,7 +18,7 @@ DOCKER_TARGETS=$(shell cat ${DOCKERFILE} | awk '/^[[:blank:]]*FROM/ { print $$4 
 ## Pull
 .PHONY: docker-pull-stages
 docker-pull-stages: ##- Pull intermediate containers
-	@for docker_target in ${DOCKER_TARGETS}; \
+	@set -eu; for docker_target in ${DOCKER_TARGETS}; \
 	do \
 		docker_intermediate_image="${CONTAINER_BUILD_IMAGE}-$$docker_target"; \
 		docker pull $$docker_intermediate_image || true; \
@@ -34,7 +34,7 @@ docker-pull: docker-pull-stages docker-pull-final ##- Pull containers
 ## Build
 .PHONY: docker-build-stages
 docker-build-stages: docker-pull-stages ##- Build intermediate containers
-	@for docker_target in ${DOCKER_TARGETS}; \
+	@set -eu; for docker_target in ${DOCKER_TARGETS}; \
 	do \
 		docker_intermediate_image="${CONTAINER_BUILD_IMAGE}-$$docker_target"; \
 		docker build -t $$docker_intermediate_image --target $$docker_target .; \
@@ -60,7 +60,7 @@ docker-tag-release: docker-pull-final
 ## Push
 .PHONY: docker-push-stages
 docker-push-stages: ##- Push intermediate containers to registry
-	@for docker_target in ${DOCKER_TARGETS}; \
+	@set -eu; for docker_target in ${DOCKER_TARGETS}; \
 	do \
 		docker_intermediate_image="${CONTAINER_BUILD_IMAGE}-$$docker_target"; \
 		docker push $$docker_intermediate_image; \
