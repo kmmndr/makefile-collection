@@ -7,11 +7,14 @@ may be complex, but avoiding complex syntax may lead to simple and
 understandable files.
 
 As (web) development tends to include more and more tools, it may be handy to
-have a quick way to build or deploy applications.
+have a quick way to run recurring tasks, build complex projects (including
+many differents technologies) or even deploy applications.
 
 Today, containers are the most proeminent way to package and start services.
+For applications requiring complex stack, tools like kubernetes are better
+suited than docker daemon only, but for small projects it is largely enough.
 This repository aims to contain makefiles for packaging, integrating and
-deploying containers.
+deploying everything.
 
 ## How it works
 
@@ -23,8 +26,8 @@ standardized environment files.
 
 ## Make for docker
 
-If your project need to build a docker container, use `docker.mk` for quick
-build make targets.
+If your project need to build a docker container, use `docker.mk` to quickly
+have build make's targets.
 
 ## Make for docker-compose
 
