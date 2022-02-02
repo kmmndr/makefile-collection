@@ -2,6 +2,9 @@
 
 compose_files :=
 
+export COMPOSE_DOCKER_CLI_BUILD = 1
+export DOCKER_BUILDKIT = 1
+
 .PHONY: docker-compose-pull
 docker-compose-pull: environment ##- Pull latest containers
 	$(info *** Pulling containers ***)
