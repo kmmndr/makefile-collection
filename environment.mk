@@ -30,7 +30,7 @@ generate-env: env.sh ##- Generate environment file ${stage}.env
 	do \
 		[ -f "$${override_env_file}" ] && echo "Appending environment override from file $${override_env_file}"; true; \
 		(([ -x "$${override_env_file}" ] && "$${override_env_file}" ${stage}) || \
-			([ -r "$${override_env_file}" ] && cat "$${override_env_file}") || true) | tee -a ${stage}.env; \
+			([ -r "$${override_env_file}" ] && cat "$${override_env_file}") || true) | tee -a ${stage}.env | sed -e 's/^\(.*=\).*/\1*****/'; \
 	done
 	@echo "Environment file ${stage}.env generated"
 
@@ -39,6 +39,14 @@ generate-folder-env-%:
 		make \
 			-C $* \
 			-e OVERRIDE_ENV_FILE="$$current_dir/host.env $$current_dir/$*.env" \
+			generate-env
+
+generate-folder-env:
+	@test ${folder} || (echo 'folder not set'; exit 1)
+	@current_dir=$(shell pwd); \
+		make \
+			-C ${folder} \
+			-e OVERRIDE_ENV_FILE="$$current_dir/host.env $$current_dir/${folder}.env" \
 			generate-env
 
 .PHONY: dump-env
