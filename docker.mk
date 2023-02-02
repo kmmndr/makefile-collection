@@ -8,6 +8,8 @@ PROJECT_PATH  ?= $(notdir $(realpath $(dir $(lastword $(MAKEFILE_LIST)))))
 DOCKERFILE    ?= Dockerfile
 DOCKER        ?= docker
 
+DOCKER_BUILD_ARGS ?=
+
 export DOCKER_BUILDKIT = 1
 
 REGISTRY_PROJECT_URL ?= $(REGISTRY)/$(PROJECT_PATH)
@@ -49,6 +51,7 @@ docker-build-stages: ##- Build intermediate containers
 	$(call for_each_target, \
 		${DOCKER} build \
 			--tag "${CONTAINER_BUILD_IMAGE}-$$docker_target" \
+			${DOCKER_BUILD_ARGS} \
 			--build-arg BUILDKIT_INLINE_CACHE=1 \
 			--cache-from "${CONTAINER_BUILD_IMAGE}-$$docker_target" \
 			--cache-from "${CONTAINER_REF_IMAGE}-$$docker_target" \
@@ -62,6 +65,7 @@ docker-build-stages: ##- Build intermediate containers
 docker-build-final: ##- Build final container
 	${DOCKER} build \
 		--tag $(CONTAINER_BUILD_IMAGE) \
+		${DOCKER_BUILD_ARGS} \
 		--build-arg BUILDKIT_INLINE_CACHE=1 \
 		.
 	${DOCKER} tag ${CONTAINER_BUILD_IMAGE} ${CONTAINER_LATEST_BUILD_IMAGE}
